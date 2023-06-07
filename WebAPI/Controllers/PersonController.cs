@@ -28,7 +28,7 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet(Name = "GetPersons")]
-    [Route("/person")]
+    [Route("/persons")]
     public IEnumerable<PersonDto> GetPersons()
     {
         return _unitOfWork

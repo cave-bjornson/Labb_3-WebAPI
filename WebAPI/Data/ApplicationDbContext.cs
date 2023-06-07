@@ -1,5 +1,4 @@
-﻿using kDg.FileBaseContext.Extensions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WebAPI.Models;
 
 namespace WebAPI.Data;
@@ -7,16 +6,12 @@ namespace WebAPI.Data;
 public class ApplicationDbContext : DbContext
 {
     public DbSet<Person> Persons { get; set; }
+    public DbSet<Interest> Interests { get; set; }
+    public DbSet<Link> Links { get; set; }
 
     /// <inheritdoc />
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
-
-    /// <inheritdoc />
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-    }
 
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,40 +39,46 @@ public class ApplicationDbContext : DbContext
                 .IsRequired();
         });
 
-        modelBuilder
-            .Entity<Person>()
-            .HasData(
-                new Person
-                {
-                    Id = 1,
-                    Name = "Björn Agnemo",
-                    PhoneNumber = "0703038338"
-                }
-            );
+        // modelBuilder
+        //     .Entity<Person>()
+        //     .HasData(
+        //         new Person
+        //         {
+        //             Id = 1,
+        //             Name = "Björn Agnemo",
+        //             PhoneNumber = "0703038338"
+        //         }
+        //     );
+        //
+        // modelBuilder
+        //     .Entity<Interest>()
+        //     .HasData(
+        //         new Interest
+        //         {
+        //             Id = 1,
+        //             Title = "Play VGM on Piano",
+        //             Description = "Play Video Game Music from Piano Notes.",
+        //             PersonId = 1
+        //         }
+        //     );
+        //
+        // modelBuilder
+        //     .Entity<Link>()
+        //     .HasData(
+        //         new Link
+        //         {
+        //             Id = 1,
+        //             Title = "Smart Game Piano",
+        //             LinkURL = new UriBuilder("www.smartgamepiano.com").Uri,
+        //             InterestId = 1,
+        //             PersonId = 1
+        //         }
+        //     );
 
-        modelBuilder
-            .Entity<Interest>()
-            .HasData(
-                new Interest
-                {
-                    Id = 1,
-                    Title = "Play VGM on Piano",
-                    Description = "Play Video Game Music from Piano Notes.",
-                    PersonId = 1
-                }
-            );
+        DataSeeder seeder = new();
 
-        modelBuilder
-            .Entity<Link>()
-            .HasData(
-                new Link
-                {
-                    Id = 1,
-                    Title = "Smart Game Piano",
-                    LinkURL = new UriBuilder("www.smartgamepiano.com").Uri,
-                    InterestId = 1,
-                    PersonId = 1
-                }
-            );
+        modelBuilder.Entity<Person>().HasData(seeder.Persons);
+        modelBuilder.Entity<Interest>().HasData(seeder.Interests);
+        modelBuilder.Entity<Link>().HasData(seeder.Links);
     }
 }
