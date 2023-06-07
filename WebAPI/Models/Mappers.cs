@@ -6,6 +6,8 @@ namespace WebAPI.Models;
 public partial class PersonMapper
 {
     public partial PersonDto PersonToPersonDto(Person person);
+
+    public partial Person CreatePersonDtoToPerson(CreatePersonDto dto);
 }
 
 [Mapper]

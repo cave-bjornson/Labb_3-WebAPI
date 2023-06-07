@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.Extensions.Primitives;
 
 namespace WebAPI.Models;
 
@@ -27,4 +28,10 @@ public class PersonDto
     public InterestDto[] Interests { get; set; }
 
     public LinkDto[] Links { get; set; }
+}
+
+public class CreatePersonDto
+{
+    public required string Name { get; set; }
+    public required string PhoneNumber { get; set; }
 }
