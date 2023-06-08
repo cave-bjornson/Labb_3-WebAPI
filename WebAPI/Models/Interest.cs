@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Models;
 
@@ -21,8 +22,20 @@ public class Interest
 
 public class InterestDto
 {
+    [JsonPropertyOrder(int.MinValue)]
     public required int Id { get; set; }
+
+    [JsonPropertyOrder(int.MinValue)]
     public required string Title { get; set; }
+
+    [JsonPropertyOrder(int.MinValue)]
     public required string Description { get; set; }
+
+    [JsonPropertyOrder(int.MinValue)]
     public required int PersonId { get; set; }
+}
+
+public class InterestWithLinksDto : InterestDto
+{
+    public LinkDto[] Links { get; set; }
 }

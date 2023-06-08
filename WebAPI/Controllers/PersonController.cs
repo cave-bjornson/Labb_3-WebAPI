@@ -42,12 +42,13 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<PersonDto> GetPersons()
+    public async Task<IEnumerable<PersonDto>> GetPersonsAsync()
     {
-        return _unitOfWork
-            .GetReadOnlyRepository<Person>()
-            .GetList(include: inc => inc.Include(p => p.Interests).Include(p => p.Links))
-            .Items.Select(p => _mapper.PersonToPersonDto(p));
+        var persons = await _unitOfWork
+            .GetReadOnlyRepositoryAsync<Person>()
+            .GetListAsync(include: inc => inc.Include(p => p.Interests).Include(p => p.Links));
+
+        return persons.Items.Select(p => _mapper.PersonToPersonDto(p));
     }
 
     [HttpPost]

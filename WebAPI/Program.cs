@@ -24,6 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<PersonMapper>();
+builder.Services.AddSingleton<InterestMapper>();
 
 var app = builder.Build();
 

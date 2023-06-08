@@ -14,6 +14,8 @@ public partial class PersonMapper
 public partial class InterestMapper
 {
     public partial InterestDto InterestToInterestDto(Interest interest);
+
+    public partial InterestWithLinksDto InterestToInterestWithLinksDto(Interest interest);
 }
 
 [Mapper]
