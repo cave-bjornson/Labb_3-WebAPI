@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Threenine.Data;
-using WebAPI.Data;
 using WebAPI.Models;
+using WebAPI.Services;
 
 namespace WebAPI.Controllers;
 
@@ -12,6 +12,8 @@ public class PersonController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
 
+    private readonly IPersonService _service;
+
     private readonly ILogger<PersonController> _logger;
 
     private readonly PersonMapper _mapper;
@@ -19,36 +21,46 @@ public class PersonController : ControllerBase
     public PersonController(
         ILogger<PersonController> logger,
         IUnitOfWork unitOfWork,
-        PersonMapper mapper
+        PersonMapper mapper,
+        IPersonService service
     )
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _service = service;
     }
 
     [HttpGet("{id}")]
-    // [Route("/persons/{id:int}")]
-    public async Task<PersonDto> GetPerson(int id)
+    public async Task<IActionResult> GetPerson(int id, bool tree)
     {
-        var person = await _unitOfWork
-            .GetReadOnlyRepositoryAsync<Person>()
-            .SingleOrDefaultAsync(
-                predicate: p => p.Id == id,
-                include: inc => inc.Include(p => p.Interests).Include(p => p.Links)
-            );
+        if (!tree)
+        {
+            return Ok(await _service.GetPersonById<PersonWithNavigationDto>(id));
+        }
 
-        return _mapper.PersonToPersonDto(person);
+        return Ok(await _service.GetPersonWithTree(id));
     }
 
     [HttpGet]
-    public async Task<IEnumerable<PersonDto>> GetPersonsAsync()
+    public async IAsyncEnumerable<PersonWithNavigationDto?> GetPersonsAsync(
+        bool interests = false,
+        bool links = false,
+        int page = 1,
+        int pageSize = 10
+    )
     {
-        var persons = await _unitOfWork
-            .GetReadOnlyRepositoryAsync<Person>()
-            .GetListAsync(include: inc => inc.Include(p => p.Interests).Include(p => p.Links));
-
-        return persons.Items.Select(p => _mapper.PersonToPersonDto(p));
+        await foreach (
+            var dto in _service.GetAllPersons<PersonWithNavigationDto>(
+                interests,
+                links,
+                page,
+                pageSize
+            )
+        )
+        {
+            yield return dto;
+        }
     }
 
     [HttpPost]

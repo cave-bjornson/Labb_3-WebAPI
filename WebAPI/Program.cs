@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Threenine.Data.DependencyInjection;
 using WebAPI.Data;
 using WebAPI.Models;
+using WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,8 +24,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IInterestService, InterestService>();
+builder.Services.AddScoped<ILinkService, LinkService>();
+
 builder.Services.AddSingleton<PersonMapper>();
 builder.Services.AddSingleton<InterestMapper>();
+builder.Services.AddSingleton<LinkMapper>();
 
 var app = builder.Build();
 

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace WebAPI.Models;
 
-public class Interest
+public class Interest : Entity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -30,12 +30,22 @@ public class InterestDto
 
     [JsonPropertyOrder(int.MinValue)]
     public required string Description { get; set; }
+}
 
-    [JsonPropertyOrder(int.MinValue)]
-    public required int PersonId { get; set; }
+public class InterestWithNavigationDto : InterestDto
+{
+    public PersonDto Person { get; set; }
+    public LinkDto[] Links { get; set; }
 }
 
 public class InterestWithLinksDto : InterestDto
 {
     public LinkDto[] Links { get; set; }
+}
+
+public class CreateInterestDto
+{
+    public required string Title { get; set; }
+    public required string Description { get; set; }
+    public required int PersonId { get; set; }
 }

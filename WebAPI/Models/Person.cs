@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Primitives;
 
 namespace WebAPI.Models;
 
-public class Person
+public class Person : Entity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -21,13 +22,26 @@ public class Person
 
 public class PersonDto
 {
+    [JsonPropertyOrder(int.MinValue)]
     public required int Id { get; set; }
+
+    [JsonPropertyOrder(int.MinValue)]
     public required string Name { get; set; }
+
+    [JsonPropertyOrder(int.MinValue)]
     public required string PhoneNumber { get; set; }
+}
 
-    public InterestDto[] Interests { get; set; }
+public class PersonWithNavigationDto : PersonDto
+{
+    public InterestDto[]? Interests { get; set; }
 
-    public LinkDto[] Links { get; set; }
+    public LinkDto[]? Links { get; set; }
+}
+
+public class PersonWithInterestsDto : PersonDto
+{
+    public InterestWithLinksDto[]? Interests { get; set; }
 }
 
 public class CreatePersonDto
